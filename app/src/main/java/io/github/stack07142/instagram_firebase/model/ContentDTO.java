@@ -7,4 +7,9 @@ public class ContentDTO {
     public String uid;
     public String userId;
     public String timestamp;
+
+    @Override
+    public String toString() {
+        return "uid = " + uid + " , userid = " + userId;
+    }
 }

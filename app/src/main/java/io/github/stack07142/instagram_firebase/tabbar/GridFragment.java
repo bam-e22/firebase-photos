@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,43 +24,54 @@ import java.util.ArrayList;
 import io.github.stack07142.instagram_firebase.R;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
-public class HomeFragment extends Fragment {
+public class GridFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_grid, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.homefragment_recyclerview);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.gridfragment_recyclerview);
 
-        recyclerView.setAdapter(new HomeFragmentRecyclerViewAdatper());
+        recyclerView.setAdapter(new GridFragmentRecyclerViewAdatper());
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         return view;
     }
 
     // Recycler View Adapter
-    class HomeFragmentRecyclerViewAdatper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    class GridFragmentRecyclerViewAdatper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private ArrayList<ContentDTO> contentDTOs;
 
-        public HomeFragmentRecyclerViewAdatper() {
+        public GridFragmentRecyclerViewAdatper() {
+
+            Log.e("GridFragment", "GridFragmentRecyclerViewAdapter");
 
             contentDTOs = new ArrayList<>();
 
             FirebaseDatabase.getInstance().getReference().child("images").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Log.e("GridFragment", "database - onDataChange");
+
                     contentDTOs.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         contentDTOs.add(snapshot.getValue(ContentDTO.class));
+
+                        Log.e("GridFragment", snapshot.getValue(ContentDTO.class).toString());
                     }
+
+
                     notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+
+                    Log.e("GridFragment", "database - onCancelled");
                 }
             });
         }
