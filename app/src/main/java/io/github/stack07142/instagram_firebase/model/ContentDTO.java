@@ -1,5 +1,8 @@
 package io.github.stack07142.instagram_firebase.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ContentDTO {
 
     public String explain;
@@ -7,6 +10,8 @@ public class ContentDTO {
     public String uid;
     public String userId;
     public String timestamp;
+    public int favoriteCount = 0;
+    public Map<String, Boolean> favorites = new HashMap<>();
 
     @Override
     public String toString() {

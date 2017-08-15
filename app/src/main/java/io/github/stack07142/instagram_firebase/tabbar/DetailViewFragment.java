@@ -12,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -37,23 +40,27 @@ public class DetailViewFragment extends Fragment {
         return view;
     }
 
-    class DetailRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class DetailRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private ArrayList<ContentDTO> contentDTOs;
+        private ArrayList<String> contentUidList;
 
-        public DetailRecyclerViewAdapter() {
+        DetailRecyclerViewAdapter() {
 
             contentDTOs = new ArrayList<>();
+            contentUidList = new ArrayList<>();
 
             FirebaseDatabase.getInstance().getReference().child("images").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     contentDTOs.clear();
+                    contentUidList.clear();
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         contentDTOs.add(snapshot.getValue(ContentDTO.class));
+                        contentUidList.add(snapshot.getKey());
                     }
 
                     notifyDataSetChanged();
@@ -90,12 +97,74 @@ public class DetailViewFragment extends Fragment {
             // 설명 텍스트
             customViewHolder.explainTextView.setText(contentDTOs.get(position).explain);
 
+
+            final int finalPosition = position;
+            customViewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    favoriteEvent(finalPosition);
+                }
+            });
+
+            if (contentDTOs.get(position)
+                    .favorites.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+            } else {
+
+                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            }
+
+            customViewHolder.favoriteCounterTextView.setText("좋아요 " + contentDTOs.get(position).favoriteCount + "개");
         }
 
         @Override
         public int getItemCount() {
 
             return contentDTOs.size();
+        }
+
+        private void favoriteEvent(int position) {
+
+            FirebaseDatabase.getInstance().getReference("images").child(contentUidList.get(position))
+                    .runTransaction(new Transaction.Handler() {
+
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+
+                            ContentDTO contentDTO = mutableData.getValue(ContentDTO.class);
+
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                            if (contentDTO == null) {
+                                return Transaction.success(mutableData);
+                            }
+                            if (contentDTO.favorites.containsKey(uid)) {
+
+                                // Unstar the post and remove self from stars
+                                contentDTO.favoriteCount = contentDTO.favoriteCount - 1;
+                                contentDTO.favorites.remove(uid);
+                            } else {
+
+                                // Star the post and add self to stars
+                                contentDTO.favoriteCount = contentDTO.favoriteCount + 1;
+                                contentDTO.favorites.put(uid, true);
+                                //likeButtonAlarm(imageDTOs.get(i).uid);
+                            }
+
+                            // Set value and report transaction success
+                            mutableData.setValue(contentDTO);
+
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                        }
+                    });
         }
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
