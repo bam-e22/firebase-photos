@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
+import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 
 /**
@@ -36,8 +37,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 return true;
             case R.id.action_home:
-
-
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.mainactivity_framelayout, new DetailViewFragment())
+                        .commit();
                 return true;
 
             case R.id.action_search:
