@@ -1,6 +1,7 @@
 package io.github.stack07142.instagram_firebase.tabbar;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -118,6 +119,17 @@ public class DetailViewFragment extends Fragment {
             }
 
             customViewHolder.favoriteCounterTextView.setText("좋아요 " + contentDTOs.get(position).favoriteCount + "개");
+
+            customViewHolder.commentImageView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(v.getContext(), CommentActivity.class);
+                    intent.putExtra("imageUid", contentUidList.get(finalPosition));
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

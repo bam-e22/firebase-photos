@@ -33,15 +33,16 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name="io.github.stack07142.instagram_firebase.LoginActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="io.github.stack07142.instagram_firebase.MainActivity" />
-        <activity android:name="io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".tabbar.AddPhotoActivity" />
+        <activity android:name=".tabbar.CommentActivity"></activity>
     </application>
 
 </manifest>
