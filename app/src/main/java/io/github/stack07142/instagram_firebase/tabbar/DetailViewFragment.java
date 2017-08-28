@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,9 +26,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
 public class DetailViewFragment extends Fragment {
+
+    FirebaseUser user;
+
+    public DetailViewFragment() {
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+    }
 
     @Nullable
     @Override
@@ -127,6 +137,8 @@ public class DetailViewFragment extends Fragment {
 
                     Intent intent = new Intent(v.getContext(), CommentActivity.class);
                     intent.putExtra("imageUid", contentUidList.get(finalPosition));
+
+                    Log.d("DetailViewFragment", contentUidList.get(finalPosition) == null ? "NULL" : contentUidList.get(finalPosition));
                     startActivity(intent);
                 }
             });
@@ -139,6 +151,8 @@ public class DetailViewFragment extends Fragment {
         }
 
         private void favoriteEvent(int position) {
+
+            final int finalPosition = position;
 
             FirebaseDatabase.getInstance().getReference("images").child(contentUidList.get(position))
                     .runTransaction(new Transaction.Handler() {
@@ -163,7 +177,7 @@ public class DetailViewFragment extends Fragment {
                                 // Star the post and add self to stars
                                 contentDTO.favoriteCount = contentDTO.favoriteCount + 1;
                                 contentDTO.favorites.put(uid, true);
-                                //likeButtonAlarm(imageDTOs.get(i).uid);
+                                likeButtonAlarm(contentDTOs.get(finalPosition).uid);
                             }
 
                             // Set value and report transaction success
@@ -178,6 +192,44 @@ public class DetailViewFragment extends Fragment {
                         }
                     });
         }
+
+        public void likeButtonAlarm(String destination) {
+
+            AlarmDTO alarmDTO = new AlarmDTO();
+            alarmDTO.destinationUid = destination;
+            alarmDTO.userId = user.getEmail();
+            alarmDTO.kind = 0;
+            FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
+        }
+/*
+        public void likeButton(final int i) {
+
+            FirebaseDatabase.getInstance().getReference("images").child(uidLists.get(i)).runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    ContentDTO p = mutableData.getValue(ContentDTO.class);
+                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    if (p == null) {
+                        return Transaction.success(mutableData);
+                    }
+                    if (p.likes.containsKey(uid)) {
+                        // Unstar the post and remove self from stars
+                        p.likeCount = p.likeCount - 1;
+                        p.likes.remove(uid);
+                    } else {
+                        // Star the post and add self to stars
+                        p.likeCount = p.likeCount + 1;
+                        p.likes.put(uid, true);
+                        likeButtonAlarm(imageDTOs.get(i).uid);
+                    }
+                    // Set value and report transaction success
+                    mutableData.setValue(p);
+                    return Transaction.success(mutableData);
+                }
+            }
+        }
+*/
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 

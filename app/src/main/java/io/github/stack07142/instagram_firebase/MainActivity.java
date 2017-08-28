@@ -1,5 +1,6 @@
 package io.github.stack07142.instagram_firebase;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,9 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
 import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
+import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
 
 /**
  * 로그인 이후 작동되는 Activity
@@ -49,6 +53,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .beginTransaction()
                         .replace(R.id.mainactivity_framelayout, new GridFragment())
                         .commit();
+                return true;
+
+            case R.id.action_account:
+
+                Fragment fragment = new UserFragment();
+
+                Bundle bundle = new Bundle();
+
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                bundle.putString("destinationUid", uid);
+
+                fragment.setArguments(bundle);
+
+                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, fragment).commit();
+
+
                 return true;
         }
 
