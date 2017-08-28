@@ -137,7 +137,7 @@ public class DetailViewFragment extends Fragment {
 
                     Intent intent = new Intent(v.getContext(), CommentActivity.class);
                     intent.putExtra("imageUid", contentUidList.get(finalPosition));
-
+                    intent.putExtra("destinationUid", contentDTOs.get(finalPosition).uid);
                     Log.d("DetailViewFragment", contentUidList.get(finalPosition) == null ? "NULL" : contentUidList.get(finalPosition));
                     startActivity(intent);
                 }
@@ -177,7 +177,7 @@ public class DetailViewFragment extends Fragment {
                                 // Star the post and add self to stars
                                 contentDTO.favoriteCount = contentDTO.favoriteCount + 1;
                                 contentDTO.favorites.put(uid, true);
-                                likeButtonAlarm(contentDTOs.get(finalPosition).uid);
+                                favoriteAlarm(contentDTOs.get(finalPosition).uid);
                             }
 
                             // Set value and report transaction success
@@ -193,12 +193,14 @@ public class DetailViewFragment extends Fragment {
                     });
         }
 
-        public void likeButtonAlarm(String destination) {
+        public void favoriteAlarm(String destinationUid) {
 
             AlarmDTO alarmDTO = new AlarmDTO();
-            alarmDTO.destinationUid = destination;
+
+            alarmDTO.destinationUid = destinationUid;
             alarmDTO.userId = user.getEmail();
-            alarmDTO.kind = 0;
+            alarmDTO.uid = user.getUid();
+            alarmDTO.kind = 0; // TODO : TypeDef
             FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
         }
 /*
@@ -221,7 +223,7 @@ public class DetailViewFragment extends Fragment {
                         // Star the post and add self to stars
                         p.likeCount = p.likeCount + 1;
                         p.likes.put(uid, true);
-                        likeButtonAlarm(imageDTOs.get(i).uid);
+                        favoriteAlarm(imageDTOs.get(i).uid);
                     }
                     // Set value and report transaction success
                     mutableData.setValue(p);

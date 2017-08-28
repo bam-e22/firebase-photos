@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 import io.github.stack07142.instagram_firebase.model.FollowDTO;
 
@@ -60,6 +61,11 @@ public class UserFragment extends Fragment {
         });
         if (getArguments() != null) {
             destinationUid = getArguments().getString("destinationUid");
+
+            if (destinationUid.equals(uid)) {
+
+                followerButton.setEnabled(false);
+            }
         }
         getFollower();
         getFollowing();
@@ -255,5 +261,19 @@ public class UserFragment extends Fragment {
                     public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                     }
                 });
+    }
+
+    private void followerAlarm(String destinationUid) {
+
+        AlarmDTO alarmDTO = new AlarmDTO();
+
+        alarmDTO.destinationUid = destinationUid;
+        alarmDTO.userId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        alarmDTO.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        alarmDTO.kind = 2;
+
+        FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
+
+
     }
 }

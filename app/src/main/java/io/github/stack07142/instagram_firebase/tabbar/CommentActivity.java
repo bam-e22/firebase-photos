@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
 public class CommentActivity extends AppCompatActivity {
@@ -33,10 +35,17 @@ public class CommentActivity extends AppCompatActivity {
 
     private RecyclerView commentRecyclerView;
 
+    private FirebaseUser user;
+    private String destinationUid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        destinationUid = getIntent().getStringExtra("destinationUid");
 
         Log.d("CommentActivity", "onCreate");
         imageUid = getIntent().getStringExtra("imageUid");
@@ -63,12 +72,30 @@ public class CommentActivity extends AppCompatActivity {
                         .child("comments")
                         .push()
                         .setValue(comment);
+
+                message.setText("");
+
+                // Comment 입력 시 commentAlarm을 호출
+                commentAlarm(destinationUid, comment.comment);
             }
         });
 
         commentRecyclerView = (RecyclerView) findViewById(R.id.commentactivity_recyclerview);
         commentRecyclerView.setAdapter(new CommentRecyclerViewAdapter());
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void commentAlarm(String destinationUid, String message) {
+
+        AlarmDTO alarmDTO = new AlarmDTO();
+
+        alarmDTO.destinationUid = destinationUid;
+        alarmDTO.userId = user.getEmail();
+        alarmDTO.uid = user.getUid();
+        alarmDTO.kind = 1;
+        alarmDTO.message = message;
+
+        FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
     }
 
     class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
