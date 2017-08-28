@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 
 import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
+import io.github.stack07142.instagram_firebase.tabbar.AlarmFragment;
 import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
@@ -69,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, fragment).commit();
 
+                return true;
+
+            case R.id.action_favorite_alarm:
+
+                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, new AlarmFragment()).commit();
 
                 return true;
         }
