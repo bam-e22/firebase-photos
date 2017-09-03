@@ -1,10 +1,12 @@
 package io.github.stack07142.instagram_firebase.tabbar;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -34,12 +36,15 @@ import io.github.stack07142.instagram_firebase.model.FollowDTO;
 
 public class UserFragment extends Fragment {
 
+    private static final int PICK_FROM_ALBUM = 10;
+
     private TextView contentsCounter;
     private TextView followerCounter;
     private TextView followeringCounter;
     private Button followerButton;
     private String destinationUid;
     private String uid;
+    private ImageView profileImage;
 
     @Nullable
     @Override
@@ -53,6 +58,26 @@ public class UserFragment extends Fragment {
         followeringCounter = (TextView) view.findViewById(R.id.userfragment_textview_following);
         followerButton = (Button) view.findViewById(R.id.userfragment_button_follow);
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        profileImage = (ImageView) view.findViewById(R.id.userfragment_imageview_profile);
+        if (getArguments() != null) {
+            destinationUid = getArguments().getString("destinationUid");
+            if (destinationUid.equals(uid)) {
+                followerButton.setEnabled(false);
+                profileImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) { //권한 요청 하는 부분 ActivityCompat.requestPermissions
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+                        //앨범 오픈
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        getActivity().startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
+                    }
+                });
+            }
+        }
+
         followerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,12 +95,34 @@ public class UserFragment extends Fragment {
         getFollower();
         getFollowing();
 
+        getProfileImage();
+
         // Recycler View
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.userfragment_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(new UserFragmentRecyclerViewAdapter());
 
         return view;
+    }
+
+    public void getProfileImage() {
+        FirebaseDatabase.getInstance().getReference()
+                .child("profileImages")
+                .child(destinationUid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        @SuppressWarnings("VisibleForTests")
+                        String url = dataSnapshot.getValue().toString();
+                        Glide.with(getActivity())
+                                .load(url)
+                                .apply(new RequestOptions().circleCrop()).into(profileImage);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     class UserFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -273,7 +320,5 @@ public class UserFragment extends Fragment {
         alarmDTO.kind = 2;
 
         FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
-
-
     }
 }

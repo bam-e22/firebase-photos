@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -135,7 +137,28 @@ public class CommentActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+
+            // Profile Image
+            FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("profileImages")
+                    .child(comments.get(position).uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    @SuppressWarnings("VisibleForTests")
+                    String url = dataSnapshot.getValue().toString();
+                    ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
+                    Glide.with(holder.itemView.getContext())
+                            .load(url)
+                            .apply(new RequestOptions().circleCrop()).into(profileImageView);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
             ((CustomViewHolder) holder).profileTextView
                     .setText(comments.get(position).userId);
             ((CustomViewHolder) holder).commentTextView
