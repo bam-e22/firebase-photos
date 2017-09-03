@@ -45,17 +45,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         // BottomNavigationView를 불러오는 코드
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.mainactivity_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            //AddPhotoActivity를 호출 하는 코드
-            case R.id.action_add_photo:
-                startActivity(new Intent(MainActivity.this, AddPhotoActivity.class));
 
-                return true;
             case R.id.action_home:
                 getFragmentManager().beginTransaction()
                         .replace(R.id.mainactivity_framelayout, new DetailViewFragment())
@@ -71,6 +69,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         .commit();
                 return true;
 
+            case R.id.action_add_photo:
+                startActivity(new Intent(MainActivity.this, AddPhotoActivity.class));
+
+                return true;
+
+            case R.id.action_favorite_alarm:
+
+                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, new AlarmFragment()).commit();
+
+                return true;
+
             case R.id.action_account:
 
                 Fragment fragment = new UserFragment();
@@ -84,12 +93,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment.setArguments(bundle);
 
                 getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, fragment).commit();
-
-                return true;
-
-            case R.id.action_favorite_alarm:
-
-                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, new AlarmFragment()).commit();
 
                 return true;
         }
@@ -128,8 +131,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             @SuppressWarnings("VisibleForTests")
                             String url = task.getResult().getDownloadUrl().toString();
-                            HashMap<String,String> map = new HashMap<String, String>(); map.put(uid,url);
-                            FirebaseDatabase.getInstance().getReference().child("profileImages").setValue(map); }
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            map.put(uid, url);
+                            FirebaseDatabase.getInstance().getReference().child("profileImages").setValue(map);
+                        }
                     });
         }
     }
