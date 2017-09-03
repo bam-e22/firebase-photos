@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorGoogleSignIn">#d34836</color>
+    <color name="colorGoogleSignInPressed">#b02513</color>
+    <color name="colorEmailSignIn">#009688</color>
+    <color name="colorEmailSignInPressed">#004D40</color>
 </resources>

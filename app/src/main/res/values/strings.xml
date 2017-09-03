@@ -1,5 +1,17 @@
 <resources>
-    <string name="app_name">FirebaseProject</string>
+    <string name="app_name">Firebase Instagram</string>
     <string name="facebook_app_id">1411258448950016</string>
     <string name="fb_login_protocol_scheme">fb1411258448950016</string>
+
+    <!-- Sign In -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signin_email">회원가입 및 이메일 로그인</string>
+    <string name="signin_google">Google으로 로그인</string>
+    <string name="signin_facebook">Facebook으로 로그인</string>
+    <string name="signup_complete">회원가입 성공</string>
+    <string name="signin_complete">로그인 성공</string>
+
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
 </resources>

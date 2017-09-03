@@ -1,28 +1,24 @@
 package io.github.stack07142.instagram_firebase;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,44 +29,37 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Arrays;
+
+import io.github.stack07142.instagram_firebase.databinding.ActivityLoginBinding;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private final String TAG = LoginActivity.class.getSimpleName();
+    // Data Binding
+    private ActivityLoginBinding binding;
 
-    // Google Sign In
-    private static final int RC_SIGN_IN = 1000; // Intent Request ID
+    // Sign In - Google
+    private static final int RC_SIGN_IN = 9001; // Intent Request ID
     private FirebaseAuth auth;
-    private GoogleSignInOptions gso;
     private GoogleApiClient mGoogleApiClient;
-    private SignInButton googleSignInButton;
 
-    // Facebook Sign In
-    private LoginButton facebookSignInButton;
+    // Sign In - Facebook
     private CallbackManager callbackManager;
-
-    // Email Sign In
-    private EditText email;
-    private EditText password;
-    private Button emailLoginButton;
 
     // Login Listener
     FirebaseAuth.AuthStateListener mAuthListener;
 
-    // Progressbar
-    ProgressBar progressBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
         // Firebase 로그인 통합 관리하는 Object 만들기
         auth = FirebaseAuth.getInstance();
 
         // 구글 로그인 옵션 설정(요청 토큰, 요청 권한 등)
-        gso = new GoogleSignInOptions
+        GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -84,37 +73,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         .build();
 
         // 구글 로그인 버튼 가져오기
-        googleSignInButton = (SignInButton) findViewById(R.id.google_sign_in_button);
-        googleSignInButton.setOnClickListener(this);
-
-        // Facebook Login 추가
-        callbackManager = CallbackManager.Factory.create();
-        facebookSignInButton = (LoginButton) findViewById(R.id.facebook_login_button);
-        facebookSignInButton.setReadPermissions("email", "public_profile");
-        facebookSignInButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
+        binding.googleSignInButton.setOnClickListener(this);
 
         // Email 로그인
-        email = (EditText) findViewById(R.id.email_edittext);
-        password = (EditText) findViewById(R.id.password_edittext);
-        emailLoginButton = (Button) findViewById(R.id.email_login_button);
-        emailLoginButton.setOnClickListener(this);
+        binding.emailLoginButton.setOnClickListener(this);
 
         // Login Listener
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -125,18 +87,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // User is signed in
                 if (user != null) {
 
-                    Toast.makeText(LoginActivity.this, "로그인 완료 됬습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.signin_complete), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
 
                     finish();
 
-                    progressBar.setVisibility(View.GONE);
-                }
-                // User is signed out
-                else {
-
+                    binding.progressBar.setVisibility(View.GONE);
                 }
             }
         };
@@ -159,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    /**
+    /*
      * Google Sign In
      */
 
@@ -182,16 +140,45 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             // 구글 로그인 버튼
             case R.id.google_sign_in_button:
 
-                progressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
 
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
 
+            // 페이스북 로그인 버튼
+            case R.id.facebook_login_button:
+
+                callbackManager = CallbackManager.Factory.create();
+
+                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                        // TODO
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+
+                        // TODO
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
+                });
+                break;
             // 이메일 로그인 버튼
             case R.id.email_login_button:
 
-                progressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
 
                 createAndLoginEmail();
                 break;
@@ -230,13 +217,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                         if (!task.isSuccessful()) {
 
-                            // 에러 발생 시 호출
+                            // TODO
+                            binding.progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
     }
 
-    /**
+    /*
      * Facebook Sign In
      */
 
@@ -253,41 +241,40 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                         if (!task.isSuccessful()) {
 
-                            // 에러 발생 시
+                            // TODO
+                            binding.progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
     }
 
-    /**
+    /*
      * Email 로그인
      */
 
     //이메일 회원가입 및 로그인 메소드
     private void createAndLoginEmail() {
-        auth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+        auth.createUserWithEmailAndPassword(binding.emailEdittext.getText().toString(), binding.passwordEdittext.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
 
-                            Log.d(TAG, "createAndLoginEmail - successful");
-
                             Toast.makeText(LoginActivity.this,
-                                    "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                                    getString(R.string.signup_complete), Toast.LENGTH_SHORT).show();
                         }
-                        //회원가입 에러 - 1. 비밀번호가 6자리 이상 입력이 안됬을 경우
-                        else if (password.getText().toString().length() < 6) {
+                        //회원가입 에러 - 1. 비밀번호가 6자리 이상 입력이 안됐을 경우
+                        else if (binding.passwordEdittext.getText().toString().length() < 6) {
 
-                            Log.d(TAG, "createAndLoginEmail - 비밀번호 6자리 이상 입력안된경우");
+                            binding.progressBar.setVisibility(View.GONE);
+
                             Toast.makeText(LoginActivity.this,
                                     task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         //회원가입 에러 - 2. 아이디가 있을 경우이며 에러를 발생시키지 않고 바로 로그인 코드로 넘어간다
                         else {
 
-                            Log.d(TAG, "createAndLoginEmail - 아이디 있는 경우");
                             signinEmail();
                         }
                     }
@@ -297,20 +284,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     //로그인 메소드
     private void signinEmail() {
 
-        auth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+        auth.signInWithEmailAndPassword(binding.emailEdittext.getText().toString(), binding.passwordEdittext.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
-
-                            Log.d(TAG, "signInEmail - successful");
-                        }
                         //로그인 에러 발생 - 1. 비밀번호가 틀릴 경우
-                        else {
+                        if (!task.isSuccessful()) {
 
-                            Log.d(TAG, "signInEmail - 비밀번호 틀린 경우");
+                            binding.progressBar.setVisibility(View.GONE);
+
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }

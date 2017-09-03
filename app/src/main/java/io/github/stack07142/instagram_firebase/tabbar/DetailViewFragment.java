@@ -107,7 +107,7 @@ public class DetailViewFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            if(dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) {
 
                                 @SuppressWarnings("VisibleForTests")
                                 String url = dataSnapshot.getValue().toString();
@@ -231,35 +231,6 @@ public class DetailViewFragment extends Fragment {
             alarmDTO.kind = 0; // TODO : TypeDef
             FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
         }
-/*
-        public void likeButton(final int i) {
-
-            FirebaseDatabase.getInstance().getReference("images").child(uidLists.get(i)).runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    ContentDTO p = mutableData.getValue(ContentDTO.class);
-                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    if (p == null) {
-                        return Transaction.success(mutableData);
-                    }
-                    if (p.likes.containsKey(uid)) {
-                        // Unstar the post and remove self from stars
-                        p.likeCount = p.likeCount - 1;
-                        p.likes.remove(uid);
-                    } else {
-                        // Star the post and add self to stars
-                        p.likeCount = p.likeCount + 1;
-                        p.likes.put(uid, true);
-                        favoriteAlarm(imageDTOs.get(i).uid);
-                    }
-                    // Set value and report transaction success
-                    mutableData.setValue(p);
-                    return Transaction.success(mutableData);
-                }
-            }
-        }
-*/
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 
