@@ -112,11 +112,15 @@ public class UserFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        @SuppressWarnings("VisibleForTests")
-                        String url = dataSnapshot.getValue().toString();
-                        Glide.with(getActivity())
-                                .load(url)
-                                .apply(new RequestOptions().circleCrop()).into(profileImage);
+
+                        if (dataSnapshot.exists()) {
+
+                            @SuppressWarnings("VisibleForTests")
+                            String url = dataSnapshot.getValue().toString();
+                            Glide.with(getActivity())
+                                    .load(url)
+                                    .apply(new RequestOptions().circleCrop()).into(profileImage);
+                        }
                     }
 
                     @Override

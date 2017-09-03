@@ -146,12 +146,16 @@ public class CommentActivity extends AppCompatActivity {
                     .child(comments.get(position).uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    @SuppressWarnings("VisibleForTests")
-                    String url = dataSnapshot.getValue().toString();
-                    ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
-                    Glide.with(holder.itemView.getContext())
-                            .load(url)
-                            .apply(new RequestOptions().circleCrop()).into(profileImageView);
+
+                    if (dataSnapshot.exists()) {
+
+                        @SuppressWarnings("VisibleForTests")
+                        String url = dataSnapshot.getValue().toString();
+                        ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
+                        Glide.with(holder.itemView.getContext())
+                                .load(url)
+                                .apply(new RequestOptions().circleCrop()).into(profileImageView);
+                    }
                 }
 
                 @Override

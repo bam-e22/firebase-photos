@@ -107,13 +107,16 @@ public class DetailViewFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            @SuppressWarnings("VisibleForTests")
-                            String url = dataSnapshot.getValue().toString();
+                            if(dataSnapshot.exists()) {
 
-                            ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
-                            Glide.with(holder.itemView.getContext())
-                                    .load(url)
-                                    .apply(new RequestOptions().circleCrop()).into(profileImageView);
+                                @SuppressWarnings("VisibleForTests")
+                                String url = dataSnapshot.getValue().toString();
+
+                                ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
+                                Glide.with(holder.itemView.getContext())
+                                        .load(url)
+                                        .apply(new RequestOptions().circleCrop()).into(profileImageView);
+                            }
                         }
 
                         @Override
