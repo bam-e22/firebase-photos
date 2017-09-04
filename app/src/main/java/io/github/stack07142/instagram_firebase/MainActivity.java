@@ -22,6 +22,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
 import io.github.stack07142.instagram_firebase.tabbar.AlarmFragment;
@@ -124,11 +125,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
                             @SuppressWarnings("VisibleForTests")
                             String url = task.getResult().getDownloadUrl().toString();
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            Map<String, Object> map = new HashMap<String, Object>();
                             map.put(uid, url);
-                            FirebaseDatabase.getInstance().getReference().child("profileImages").setValue(map);
+                            FirebaseDatabase.getInstance().getReference().child("profileImages").updateChildren(map);
                         }
                     });
         }
