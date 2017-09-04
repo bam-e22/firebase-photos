@@ -53,18 +53,23 @@ public class UserFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        contentsCounter = (TextView) view.findViewById(R.id.userfragment_textview_contentscounter);
-        followerCounter = (TextView) view.findViewById(R.id.userfragment_textview_follower);
-        followeringCounter = (TextView) view.findViewById(R.id.userfragment_textview_following);
-        followerButton = (Button) view.findViewById(R.id.userfragment_button_follow);
+        contentsCounter = (TextView) view.findViewById(R.id.account_tv_post_count);
+        followerCounter = (TextView) view.findViewById(R.id.account_tv_follower_count);
+        followeringCounter = (TextView) view.findViewById(R.id.account_tv_following_count);
+        followerButton = (Button) view.findViewById(R.id.account_btn_follow_signout);
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        profileImage = (ImageView) view.findViewById(R.id.userfragment_imageview_profile);
+        profileImage = (ImageView) view.findViewById(R.id.account_iv_profile);
+
         if (getArguments() != null) {
+
             destinationUid = getArguments().getString("destinationUid");
+
             if (destinationUid.equals(uid)) {
+
                 followerButton.setEnabled(false);
                 profileImage.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View view) { //권한 요청 하는 부분 ActivityCompat.requestPermissions
                         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
@@ -84,6 +89,7 @@ public class UserFragment extends Fragment {
                 requestFollow();
             }
         });
+
         if (getArguments() != null) {
             destinationUid = getArguments().getString("destinationUid");
 
@@ -92,13 +98,14 @@ public class UserFragment extends Fragment {
                 followerButton.setEnabled(false);
             }
         }
+
         getFollower();
         getFollowing();
 
         getProfileImage();
 
         // Recycler View
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.userfragment_recyclerview);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.account_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(new UserFragmentRecyclerViewAdapter());
 
