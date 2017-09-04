@@ -13,15 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
@@ -30,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.databinding.FragmentUserBinding;
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 import io.github.stack07142.instagram_firebase.model.FollowDTO;
@@ -38,13 +38,15 @@ public class UserFragment extends Fragment {
 
     private static final int PICK_FROM_ALBUM = 10;
 
-    private TextView contentsCounter;
-    private TextView followerCounter;
-    private TextView followeringCounter;
-    private Button followerButton;
+    // Data Binding
+    private FragmentUserBinding binding;
+
+    // Firebase
+    private DatabaseReference dbRef;
+
     private String destinationUid;
     private String uid;
-    private ImageView profileImage;
+
 
     @Nullable
     @Override
@@ -53,98 +55,101 @@ public class UserFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        contentsCounter = (TextView) view.findViewById(R.id.account_tv_post_count);
-        followerCounter = (TextView) view.findViewById(R.id.account_tv_follower_count);
-        followeringCounter = (TextView) view.findViewById(R.id.account_tv_following_count);
-        followerButton = (Button) view.findViewById(R.id.account_btn_follow_signout);
+        // Firebase
+        dbRef = FirebaseDatabase.getInstance().getReference();
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        profileImage = (ImageView) view.findViewById(R.id.account_iv_profile);
-
-        if (getArguments() != null) {
-
-            destinationUid = getArguments().getString("destinationUid");
-
-            if (destinationUid.equals(uid)) {
-
-                followerButton.setEnabled(false);
-                profileImage.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) { //권한 요청 하는 부분 ActivityCompat.requestPermissions
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-
-                        //앨범 오픈
-                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                        photoPickerIntent.setType("image/*");
-                        getActivity().startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
-                    }
-                });
-            }
-        }
-
-        followerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestFollow();
-            }
-        });
-
-        if (getArguments() != null) {
-            destinationUid = getArguments().getString("destinationUid");
-
-            if (destinationUid.equals(uid)) {
-
-                followerButton.setEnabled(false);
-            }
-        }
-
-        getFollower();
-        getFollowing();
-
-        getProfileImage();
-
-        // Recycler View
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.account_recyclerview);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerView.setAdapter(new UserFragmentRecyclerViewAdapter());
 
         return view;
     }
 
-    public void getProfileImage() {
-        FirebaseDatabase.getInstance().getReference()
-                .child("profileImages")
-                .child(destinationUid)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+    // UI 변경 작업
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        binding = FragmentUserBinding.bind(getView());
+
+        /*
+         * UI Setting
+         */
+
+        // 버튼 - Follow or SignOut
+        if (getArguments() != null) {
+
+            destinationUid = getArguments().getString("destinationUid");
+
+            // 본인 계정인 경우 -> 로그아웃
+            if (destinationUid != null && destinationUid.equals(uid)) {
+
+                binding.accountBtnFollowSignout.setText(getString(R.string.signout));
+                binding.accountBtnFollowSignout.setOnClickListener(new View.OnClickListener() {
+
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onClick(View view) {
 
-                        if (dataSnapshot.exists()) {
-
-                            @SuppressWarnings("VisibleForTests")
-                            String url = dataSnapshot.getValue().toString();
-                            Glide.with(getActivity())
-                                    .load(url)
-                                    .apply(new RequestOptions().circleCrop()).into(profileImage);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        signOut();
                     }
                 });
+            }
+            // 본인 계정이 아닌 경우 -> 팔로우
+            else {
+
+                binding.accountBtnFollowSignout.setText(getString(R.string.follow));
+                binding.accountBtnFollowSignout.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        requestFollow();
+                    }
+                });
+            }
+        }
+
+        // Profile Image Click Listener
+        binding.accountIvProfile.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                //권한 요청 하는 부분
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+                //앨범 오픈
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                getActivity().startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
+            }
+        });
+
+        /*
+         * Get Data
+         */
+        getProfileImage();
+        getFollower();
+        getFollowing();
+        // TODO : get Post Count
+
+        // Recycler View
+        binding.accountRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        binding.accountRecyclerview.setAdapter(new UserFragmentRecyclerViewAdapter());
     }
 
-    class UserFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    /* ------------------------------------------------------------------------------------------ */
+
+    /**
+     * RecyclerView Adapter
+     */
+
+    private class UserFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private ArrayList<ContentDTO> contentDTOs;
 
-        public UserFragmentRecyclerViewAdapter() {
+        UserFragmentRecyclerViewAdapter() {
 
             contentDTOs = new ArrayList<>();
 
-            FirebaseDatabase.getInstance().getReference().child("images").addValueEventListener(new ValueEventListener() {
+            dbRef.child("images").addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -191,34 +196,62 @@ public class UserFragment extends Fragment {
             return contentDTOs.size();
         }
 
+        // RecyclerView Adapter - View Holder
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 
-            public ImageView imageView;
+            ImageView imageView;
 
-            public CustomViewHolder(ImageView imageView) {
+            CustomViewHolder(ImageView imageView) {
                 super(imageView);
                 this.imageView = imageView;
             }
         }
     }
 
+    /* ------------------------------------------------------------------------------------------ */
+
+    /**
+     * Get - Profile Image, Follwer Count, Following Count, Post Count
+     */
+
+    public void getProfileImage() {
+
+        dbRef.child("profileImages").child(destinationUid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if (dataSnapshot.exists()) {
+
+                            @SuppressWarnings("VisibleForTests")
+                            String url = dataSnapshot.getValue().toString();
+                            Glide.with(getActivity())
+                                    .load(url)
+                                    .apply(new RequestOptions().circleCrop()).into(binding.accountIvProfile);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
     public void getFollower() {
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .child(destinationUid)
+
+        dbRef.child("users").child(destinationUid)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         FollowDTO followDTO = dataSnapshot.getValue(FollowDTO.class);
                         try {
-                            followerCounter.setText(String.valueOf(followDTO.followerCount));
+                            binding.accountTvFollowerCount.setText(String.valueOf(followDTO.followerCount));
                             if (followDTO.followers.containsKey(uid)) {
-                                followerButton
+                                binding.accountBtnFollowSignout
                                         .getBackground()
                                         .setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
                             } else {
-                                followerButton
+                                binding.accountBtnFollowSignout
                                         .getBackground().setColorFilter(null);
                             }
                         } catch (Exception e) {
@@ -233,13 +266,14 @@ public class UserFragment extends Fragment {
     }
 
     public void getFollowing() {
-        FirebaseDatabase.getInstance().getReference().child("users").child(destinationUid)
+
+        dbRef.child("users").child(destinationUid)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         FollowDTO followDTO = dataSnapshot.getValue(FollowDTO.class);
                         try {
-                            followeringCounter.setText(String.valueOf(followDTO.followingCount));
+                            binding.accountTvFollowingCount.setText(String.valueOf(followDTO.followingCount));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -251,11 +285,15 @@ public class UserFragment extends Fragment {
                 });
     }
 
+    /* ------------------------------------------------------------------------------------------ */
+
+    /**
+     * Request Follower, Follow Alarm
+     */
+
     public void requestFollow() {
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .child(uid)
+
+        dbRef.child("users").child(uid)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
@@ -275,6 +313,7 @@ public class UserFragment extends Fragment {
                             // Star the post and add self to stars
                             followDTO.followingCount = followDTO.followingCount + 1;
                             followDTO.followings.put(destinationUid, true);
+                            followerAlarm(destinationUid);
                         }
                         // Set value and report transaction success
                         mutableData.setValue(followDTO);
@@ -286,10 +325,7 @@ public class UserFragment extends Fragment {
                     }
                 });
 
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users")
-                .child(destinationUid)
+        dbRef.child("users").child(destinationUid)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
@@ -330,6 +366,18 @@ public class UserFragment extends Fragment {
         alarmDTO.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         alarmDTO.kind = 2;
 
-        FirebaseDatabase.getInstance().getReference().child("alarms").push().setValue(alarmDTO);
+        dbRef.child("alarms").push().setValue(alarmDTO);
     }
+
+
+    /* ------------------------------------------------------------------------------------------ */
+
+    /**
+     * Sign Out
+     */
+
+    private void signOut() {
+
+    }
+
 }

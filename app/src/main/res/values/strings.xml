@@ -11,6 +11,7 @@
     <string name="signin_facebook">Facebook으로 로그인</string>
     <string name="signup_complete">회원가입 성공</string>
     <string name="signin_complete">로그인 성공</string>
+    <string name="signout">로그아웃</string>
 
     <!-- Bottom Navigation View -->
     <string name="home">home</string>
