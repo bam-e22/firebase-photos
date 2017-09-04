@@ -108,21 +108,21 @@ public class AlarmFragment extends Fragment {
 
                 case 0:
 
-                    String str_0 = alarmDTOList.get(position).userId + "님이 좋아요를 눌렀습니다.";
+                    String str_0 = alarmDTOList.get(position).userId + getString(R.string.alarm_favorite);
 
                     ((CustomViewHolder) holder).profileTextView.setText(str_0);
                     break;
 
                 case 1:
 
-                    String str_1 = alarmDTOList.get(position).userId + "님이" + alarmDTOList.get(position).message + "메세지를 남겼습니다.";
+                    String str_1 = alarmDTOList.get(position).userId + getString(R.string.alarm_who) + alarmDTOList.get(position).message + getString(R.string.alarm_comment);
 
                     ((CustomViewHolder) holder).profileTextView.setText(str_1);
                     break;
 
                 case 2:
 
-                    String str_2 = alarmDTOList.get(position).userId + "님이 당신의 계정을 팔로워하기 시작했습니다.";
+                    String str_2 = alarmDTOList.get(position).userId + getString(R.string.alarm_follow);
 
                     ((CustomViewHolder) holder).profileTextView.setText(str_2);
                     break;
@@ -138,10 +138,10 @@ public class AlarmFragment extends Fragment {
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 
-            public ImageView profileImageView;
-            public TextView profileTextView;
+            ImageView profileImageView;
+            TextView profileTextView;
 
-            public CustomViewHolder(View itemView) {
+            CustomViewHolder(View itemView) {
                 super(itemView);
 
                 profileImageView = (ImageView) itemView.findViewById(R.id.commentviewitem_imageview_profile);
