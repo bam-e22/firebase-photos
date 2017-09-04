@@ -54,9 +54,9 @@ public class CommentActivity extends AppCompatActivity {
 
         Log.d("CommentActivity", imageUid == null ? "NULL" : imageUid);
 
-        message = (EditText) findViewById(R.id.commentactivity_edittext_message);
+        message = (EditText) findViewById(R.id.comment_edit_message);
 
-        sendButton = (Button) findViewById(R.id.commentactivity_button_send);
+        sendButton = (Button) findViewById(R.id.comment_btn_send);
         sendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -82,7 +82,7 @@ public class CommentActivity extends AppCompatActivity {
             }
         });
 
-        commentRecyclerView = (RecyclerView) findViewById(R.id.commentactivity_recyclerview);
+        commentRecyclerView = (RecyclerView) findViewById(R.id.comment_recyclerview);
         commentRecyclerView.setAdapter(new CommentRecyclerViewAdapter());
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

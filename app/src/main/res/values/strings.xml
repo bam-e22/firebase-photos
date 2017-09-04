@@ -36,6 +36,12 @@
     <string name="alarm_comment">&#160;메세지를 남겼습니다.</string>
     <string name="alarm_follow">님이 당신의 계정을 팔로워하기 시작했습니다.</string>
 
+    <!-- Comment -->
+    <string name="send">보내기</string>
+
+    <!-- Add Photo -->
+    <string name="upload_image">사진 올리기</string>
+    <string name="hint_image_content">내용</string>
 
     <item name="visible" type="id" />
     <item name="masked" type="id" />

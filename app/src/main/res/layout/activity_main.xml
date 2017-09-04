@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="io.github.stack07142.instagram_firebase.MainActivity">
 
+    <!-- Toolbar -->
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -32,6 +33,7 @@
         android:background="@color/colorDivision"
         android:orientation="horizontal" />
 
+    <!-- ProgressBar -->
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
@@ -39,6 +41,7 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
+    <!-- Bottom Navigation View -->
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -57,6 +60,7 @@
         android:background="@color/colorDivision"
         android:orientation="horizontal" />
 
+    <!-- Contents -->
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"

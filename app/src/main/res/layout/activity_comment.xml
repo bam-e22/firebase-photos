@@ -1,34 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.github.stack07142.instagram_firebase.tabbar.CommentActivity">
 
-    <Button
-        android:id="@+id/commentactivity_button_send"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="보내기" />
+    <!-- Toolbar -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <EditText
-        android:id="@+id/commentactivity_edittext_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@id/commentactivity_button_send" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo_title" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/toolbar_division"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/my_toolbar"
+        android:background="@color/colorDivision"
+        android:orientation="horizontal" />
+
+    <!-- Contents -->
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/commentactivity_recyclerview"
+        android:id="@+id/comment_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_division"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/comment_btn_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/commentactivity_edittext_message"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@id/comment_recyclerview"
+        android:layout_margin="10dp"
+        android:text="@string/send"
+        android:theme="@style/ButtonStyle" />
+
+    <EditText
+        android:id="@+id/comment_edit_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_recyclerview"
+        android:layout_margin="10dp"
+        android:layout_toStartOf="@id/comment_btn_send" />
+
 
 </RelativeLayout>

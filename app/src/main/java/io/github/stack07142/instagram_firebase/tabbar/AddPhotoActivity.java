@@ -54,9 +54,9 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_add_photo);
 
         //ImageView Button EditText 찾아오고 버튼 세팅하기
-        imageView = (ImageView) findViewById(R.id.addphotoactivity_imageview);
-        editText = (EditText) findViewById(R.id.addphotoactivity_edittext_explain);
-        button = (Button) findViewById(R.id.addphotoactivity_button_upload);
+        imageView = (ImageView) findViewById(R.id.addphoto_image);
+        editText = (EditText) findViewById(R.id.addphoto_edit_explain);
+        button = (Button) findViewById(R.id.addphoto_btn_upload);
         button.setOnClickListener(this);
 
         //권한 요청 하는 부분
@@ -103,7 +103,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
 
-        if (v.getId() == R.id.addphotoactivity_button_upload && photoUrl != null) {
+        if (v.getId() == R.id.addphoto_btn_upload && photoUrl != null) {
 
             Log.d("AddPhotoActivity", " upload button clicked");
             File file = new File(photoUrl);
