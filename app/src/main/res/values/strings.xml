@@ -12,6 +12,8 @@
     <string name="signup_complete">회원가입 성공</string>
     <string name="signin_complete">로그인 성공</string>
     <string name="signout">로그아웃</string>
+    <string name="signout_success">로그아웃 성공</string>
+    <string name="signout_fail">로그아웃 실패</string>
 
     <!-- Bottom Navigation View -->
     <string name="home">home</string>

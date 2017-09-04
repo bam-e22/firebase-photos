@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private CallbackManager callbackManager;
 
     // Login Listener
-    FirebaseAuth.AuthStateListener mAuthListener;
+    FirebaseAuth.AuthStateListener authListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +75,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // 구글 로그인 버튼 가져오기
         binding.googleSignInButton.setOnClickListener(this);
 
+        // Facebook Login
+        callbackManager = CallbackManager.Factory.create();
+
         // Email 로그인
         binding.emailLoginButton.setOnClickListener(this);
 
         // Login Listener
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
@@ -104,16 +107,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onStart() {
         super.onStart();
 
-        auth.addAuthStateListener(mAuthListener);
+        auth.addAuthStateListener(authListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        if (mAuthListener != null) {
+        if (authListener != null) {
 
-            auth.removeAuthStateListener(mAuthListener);
+            auth.removeAuthStateListener(authListener);
         }
     }
 
@@ -148,8 +151,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             // 페이스북 로그인 버튼
             case R.id.facebook_login_button:
-
-                callbackManager = CallbackManager.Factory.create();
 
                 LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
                 LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {

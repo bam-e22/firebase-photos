@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import io.github.stack07142.instagram_firebase.LoginActivity;
 import io.github.stack07142.instagram_firebase.R;
 import io.github.stack07142.instagram_firebase.databinding.FragmentUserBinding;
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
@@ -42,7 +53,9 @@ public class UserFragment extends Fragment {
     private FragmentUserBinding binding;
 
     // Firebase
+    private FirebaseAuth auth;
     private DatabaseReference dbRef;
+    FirebaseAuth.AuthStateListener authListener;
 
     private String destinationUid;
     private String uid;
@@ -56,8 +69,27 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         // Firebase
+        auth = FirebaseAuth.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference();
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        uid = auth.getCurrentUser().getUid();
+
+        // Auth State Listener
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                // User is signed out
+                if (user == null) {
+
+                    Toast.makeText(getActivity(), getString(R.string.signout_success), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
+            }
+        };
 
         return view;
     }
@@ -379,6 +411,87 @@ public class UserFragment extends Fragment {
 
     private void signOut() {
 
+        // get Auth Provider
+        if (auth.getCurrentUser().getProviders() != null && auth.getCurrentUser().getProviders().get(0).equals("google.com")) {
+
+            googleSignOut();
+        } else {
+
+            auth.signOut();
+        }
     }
 
+    private void googleSignOut() {
+
+        // GoogleSignInOptions 개체 구성
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
+        final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage((FragmentActivity) getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        // hideProgressDialog();
+                        Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        googleApiClient.connect();
+        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+
+                auth.signOut();
+                if (googleApiClient.isConnected()) {
+
+                    Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(@NonNull Status status) {
+
+                            if (!status.isSuccess()) {
+
+                                // hideProgressDialog();
+                                Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+                // hideProgressDialog();
+                Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /* ------------------------------------------------------------------------------------------ */
+
+    /**
+     * Auth Status Listener
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        auth.removeAuthStateListener(authListener);
+    }
 }
