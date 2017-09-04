@@ -128,7 +128,6 @@ public class UserFragment extends Fragment {
         getProfileImage();
         getFollower();
         getFollowing();
-        // TODO : get Post Count
 
         // Recycler View
         binding.accountRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -160,6 +159,8 @@ public class UserFragment extends Fragment {
 
                         contentDTOs.add(snapshot.getValue(ContentDTO.class));
                     }
+
+                    binding.accountTvPostCount.setText(String.valueOf(contentDTOs.size()));
                     notifyDataSetChanged();
                 }
 
@@ -211,10 +212,10 @@ public class UserFragment extends Fragment {
     /* ------------------------------------------------------------------------------------------ */
 
     /**
-     * Get - Profile Image, Follwer Count, Following Count, Post Count
+     * Get - Profile Image, Follwer Count, Following Count, (Post Count <- ContentsDTO's Size)
      */
 
-    public void getProfileImage() {
+    void getProfileImage() {
 
         dbRef.child("profileImages").child(destinationUid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -237,7 +238,7 @@ public class UserFragment extends Fragment {
                 });
     }
 
-    public void getFollower() {
+    void getFollower() {
 
         dbRef.child("users").child(destinationUid)
                 .addValueEventListener(new ValueEventListener() {
@@ -265,7 +266,7 @@ public class UserFragment extends Fragment {
                 });
     }
 
-    public void getFollowing() {
+    void getFollowing() {
 
         dbRef.child("users").child(destinationUid)
                 .addValueEventListener(new ValueEventListener() {
