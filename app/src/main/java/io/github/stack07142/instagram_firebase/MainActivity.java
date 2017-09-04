@@ -29,20 +29,15 @@ import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
 
-/**
- * 로그인 이후 작동되는 Activity
- */
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final int PICK_FROM_ALBUM = 10;
-    private String photoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // BottomNavigationView를 불러오는 코드
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.mainactivity_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
@@ -114,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             cursor.moveToFirst();
 
             //이미지 경로
-            photoPath = cursor.getString(column_index);
+            String photoPath = cursor.getString(column_index);
 
             //유저 Uid
             final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); //파일 업로드
