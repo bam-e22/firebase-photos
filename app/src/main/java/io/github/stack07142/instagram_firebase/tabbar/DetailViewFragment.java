@@ -150,10 +150,10 @@ public class DetailViewFragment extends Fragment {
             if (contentDTOs.get(position)
                     .favorites.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
-                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_black_24dp);
+                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite);
             } else {
 
-                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border);
             }
 
             customViewHolder.favoriteCounterTextView.setText("좋아요 " + contentDTOs.get(position).favoriteCount + "개");

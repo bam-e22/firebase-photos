@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.mainactivity_bottom_navigation);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         bottomNavigationView.setSelectedItemId(R.id.action_home);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             case R.id.action_home:
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.mainactivity_framelayout, new DetailViewFragment())
+                        .replace(R.id.main_content, new DetailViewFragment())
                         .commit();
                 return true;
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Log.d("MainActivity", "action_search");
                 getFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.mainactivity_framelayout, new GridFragment())
+                        .replace(R.id.main_content, new GridFragment())
                         .commit();
                 return true;
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             case R.id.action_favorite_alarm:
 
-                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, new AlarmFragment()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_content, new AlarmFragment()).commit();
 
                 return true;
 
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 fragment.setArguments(bundle);
 
-                getFragmentManager().beginTransaction().replace(R.id.mainactivity_framelayout, fragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
 
                 return true;
         }

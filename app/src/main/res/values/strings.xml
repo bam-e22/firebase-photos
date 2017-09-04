@@ -12,6 +12,13 @@
     <string name="signup_complete">회원가입 성공</string>
     <string name="signin_complete">로그인 성공</string>
 
+    <!-- Bottom Navigation View -->
+    <string name="home">home</string>
+    <string name="search">Search</string>
+    <string name="gallery">Gallery</string>
+    <string name="favorite">Favorite</string>
+    <string name="account">Account</string>
+
     <item name="visible" type="id"/>
     <item name="masked" type="id"/>
 </resources>
