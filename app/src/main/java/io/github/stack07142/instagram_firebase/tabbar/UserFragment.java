@@ -189,7 +189,13 @@ public class UserFragment extends Fragment {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                        contentDTOs.add(snapshot.getValue(ContentDTO.class));
+                        ContentDTO content = snapshot.getValue(ContentDTO.class);
+
+                        // 나의 사진만 찾기
+                        if (content.uid.equals(uid)) {
+
+                            contentDTOs.add(snapshot.getValue(ContentDTO.class));
+                        }
                     }
 
                     binding.accountTvPostCount.setText(String.valueOf(contentDTOs.size()));
