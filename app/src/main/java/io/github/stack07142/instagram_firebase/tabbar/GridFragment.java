@@ -1,12 +1,11 @@
 package io.github.stack07142.instagram_firebase.tabbar;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,31 +46,22 @@ public class GridFragment extends Fragment {
 
         public GridFragmentRecyclerViewAdatper() {
 
-            Log.e("GridFragment", "GridFragmentRecyclerViewAdapter");
-
             contentDTOs = new ArrayList<>();
 
             FirebaseDatabase.getInstance().getReference().child("images").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    Log.e("GridFragment", "database - onDataChange");
-
                     contentDTOs.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         contentDTOs.add(snapshot.getValue(ContentDTO.class));
-
-                        Log.e("GridFragment", snapshot.getValue(ContentDTO.class).toString());
                     }
-
 
                     notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
-                    Log.e("GridFragment", "database - onCancelled");
                 }
             });
         }

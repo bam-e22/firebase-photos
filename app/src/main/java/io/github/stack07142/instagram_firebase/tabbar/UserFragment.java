@@ -41,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.LoginActivity;
+import io.github.stack07142.instagram_firebase.MainActivity;
 import io.github.stack07142.instagram_firebase.R;
 import io.github.stack07142.instagram_firebase.databinding.FragmentUserBinding;
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
@@ -59,11 +60,12 @@ public class UserFragment extends Fragment {
     private DatabaseReference dbRef;
     FirebaseAuth.AuthStateListener authListener;
 
-    private String destinationUid;
+    //private String destinationUid;
     private String uid;
+    private String currentUserUid;
 
     // Activity
-    private Activity activity;
+    private MainActivity activity;
 
     @Override
     public void onAttach(Context context) {
@@ -71,7 +73,7 @@ public class UserFragment extends Fragment {
 
         if (context instanceof Activity) {
 
-            activity = (Activity) context;
+            activity = (MainActivity) context;
         }
     }
 
@@ -85,7 +87,9 @@ public class UserFragment extends Fragment {
         // Firebase
         auth = FirebaseAuth.getInstance();
         dbRef = FirebaseDatabase.getInstance().getReference();
-        uid = auth.getCurrentUser().getUid();
+
+        currentUserUid = auth.getCurrentUser().getUid();
+        uid = getArguments().getString("destinationUid");
 
         // Auth State Listener
         authListener = new FirebaseAuth.AuthStateListener() {
@@ -122,10 +126,10 @@ public class UserFragment extends Fragment {
         // 버튼 - Follow or SignOut
         if (getArguments() != null) {
 
-            destinationUid = getArguments().getString("destinationUid");
+            uid = getArguments().getString("destinationUid");
 
-            // 본인 계정인 경우 -> 로그아웃
-            if (destinationUid != null && destinationUid.equals(uid)) {
+            // 본인 계정인 경우 -> 로그아웃, Toolbar 기본으로 설정
+            if (uid != null && uid.equals(currentUserUid)) {
 
                 binding.accountBtnFollowSignout.setText(getString(R.string.signout));
                 binding.accountBtnFollowSignout.setOnClickListener(new View.OnClickListener() {
@@ -136,8 +140,10 @@ public class UserFragment extends Fragment {
                         signOut();
                     }
                 });
+
+                activity.setToolbarDefault();
             }
-            // 본인 계정이 아닌 경우 -> 팔로우
+            // 본인 계정이 아닌 경우 -> 팔로우, Toolbar 설정 변경(뒤로 버튼, UserId 표시)
             else {
 
                 binding.accountBtnFollowSignout.setText(getString(R.string.follow));
@@ -147,6 +153,21 @@ public class UserFragment extends Fragment {
                     public void onClick(View view) {
 
                         requestFollow();
+                    }
+                });
+
+                activity.getBinding().toolbarTitleImage.setVisibility(View.GONE);
+                activity.getBinding().toolbarBtnBack.setVisibility(View.VISIBLE);
+                activity.getBinding().toolbarUsername.setVisibility(View.VISIBLE);
+
+                activity.getBinding().toolbarUsername.setText(getArguments().getString("userId"));
+
+                activity.getBinding().toolbarBtnBack.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        activity.getBinding().bottomNavigation.setSelectedItemId(R.id.action_home);
                     }
                 });
             }
@@ -269,7 +290,7 @@ public class UserFragment extends Fragment {
 
     void getProfileImage() {
 
-        dbRef.child("profileImages").child(destinationUid)
+        dbRef.child("profileImages").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -292,7 +313,7 @@ public class UserFragment extends Fragment {
 
     void getFollower() {
 
-        dbRef.child("users").child(destinationUid)
+        dbRef.child("users").child(uid)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -320,7 +341,7 @@ public class UserFragment extends Fragment {
 
     void getFollowing() {
 
-        dbRef.child("users").child(destinationUid)
+        dbRef.child("users").child(uid)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -346,30 +367,40 @@ public class UserFragment extends Fragment {
 
     public void requestFollow() {
 
-        dbRef.child("users").child(uid)
+        dbRef.child("users").child(currentUserUid)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
+
                         FollowDTO followDTO = mutableData.getValue(FollowDTO.class);
+
                         if (followDTO == null) {
+
                             followDTO = new FollowDTO();
                             followDTO.followingCount = 1;
-                            followDTO.followings.put(destinationUid, true);
+                            followDTO.followings.put(uid, true);
                             mutableData.setValue(followDTO);
+
                             return Transaction.success(mutableData);
                         }
-                        if (followDTO.followings.containsKey(destinationUid)) {
-                            // Unstar the post and remove self from stars
+
+                        // Unstar the post and remove self from stars
+                        if (followDTO.followings.containsKey(uid)) {
+
                             followDTO.followingCount = followDTO.followingCount - 1;
-                            followDTO.followings.remove(destinationUid);
-                        } else {
-                            // Star the post and add self to stars
-                            followDTO.followingCount = followDTO.followingCount + 1;
-                            followDTO.followings.put(destinationUid, true);
-                            followerAlarm(destinationUid);
+                            followDTO.followings.remove(uid);
                         }
+                        // Star the post and add self to stars
+                        else {
+
+                            followDTO.followingCount = followDTO.followingCount + 1;
+                            followDTO.followings.put(uid, true);
+                            followerAlarm(uid);
+                        }
+
                         // Set value and report transaction success
                         mutableData.setValue(followDTO);
+
                         return Transaction.success(mutableData);
                     }
 
@@ -378,29 +409,39 @@ public class UserFragment extends Fragment {
                     }
                 });
 
-        dbRef.child("users").child(destinationUid)
+        dbRef.child("users").child(uid)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
+
                         FollowDTO followDTO = mutableData.getValue(FollowDTO.class);
+
                         if (followDTO == null) {
+
                             followDTO = new FollowDTO();
                             followDTO.followerCount = 1;
-                            followDTO.followers.put(uid, true);
+                            followDTO.followers.put(currentUserUid, true);
                             mutableData.setValue(followDTO);
+
                             return Transaction.success(mutableData);
                         }
-                        if (followDTO.followers.containsKey(uid)) {
-                            // Unstar the post and remove self from stars
+
+                        // Unstar the post and remove self from stars
+                        if (followDTO.followers.containsKey(currentUserUid)) {
+
                             followDTO.followerCount = followDTO.followerCount - 1;
-                            followDTO.followers.remove(uid);
-                        } else {
-                            // Star the post and add self to stars
-                            followDTO.followerCount = followDTO.followerCount + 1;
-                            followDTO.followers.put(uid, true);
+                            followDTO.followers.remove(currentUserUid);
                         }
+                        // Star the post and add self to stars
+                        else {
+
+                            followDTO.followerCount = followDTO.followerCount + 1;
+                            followDTO.followers.put(currentUserUid, true);
+                        }
+
                         // Set value and report transaction success
                         mutableData.setValue(followDTO);
+
                         return Transaction.success(mutableData);
                     }
 

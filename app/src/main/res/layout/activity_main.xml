@@ -18,12 +18,46 @@
             app:contentInsetStart="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="3dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/logo_title" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/toolbar_title_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/logo_title" />
+
+                <ImageButton
+                    android:id="@+id/toolbar_btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="22dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@color/colorWhite"
+                    android:contentDescription="@string/back"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_arrow_back" />
+
+                <TextView
+                    android:id="@+id/toolbar_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/toolbar_btn_back"
+                    android:gravity="center"
+                    android:textColor="@color/colorNavIcon"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    tools:text="stack.07142" />
+
+            </RelativeLayout>
+
 
         </android.support.v7.widget.Toolbar>
 

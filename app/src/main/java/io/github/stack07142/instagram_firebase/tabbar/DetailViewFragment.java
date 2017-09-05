@@ -31,6 +31,8 @@ import io.github.stack07142.instagram_firebase.databinding.ItemDetailviewBinding
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
+import static io.github.stack07142.instagram_firebase.util.StatusCode.FRAGMENT_ARG;
+
 public class DetailViewFragment extends Fragment {
 
     private FirebaseUser user;
@@ -104,6 +106,7 @@ public class DetailViewFragment extends Fragment {
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
+            final int finalPosition = position;
             final ItemDetailviewBinding binding = ((CustomViewHolder) holder).getBinding();
 
             // Profile Image
@@ -132,6 +135,25 @@ public class DetailViewFragment extends Fragment {
                         }
                     });
 
+            binding.detailviewitemProfileImage.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    Fragment fragment = new UserFragment();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("destinationUid", contentDTOs.get(finalPosition).uid);
+                    bundle.putString("userId", contentDTOs.get(finalPosition).userId);
+                    bundle.putInt(FRAGMENT_ARG, 5);
+
+                    fragment.setArguments(bundle);
+                    getActivity().getFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, fragment)
+                            .commit();
+                }
+            });
+
             // 유저 아이디
             binding.detailviewitemProfileTextview.setText(contentDTOs.get(position).userId);
 
@@ -143,8 +165,6 @@ public class DetailViewFragment extends Fragment {
             // 설명 텍스트
             binding.detailviewitemExplainTextview.setText(contentDTOs.get(position).explain);
 
-
-            final int finalPosition = position;
             binding.detailviewitemFavoriteImageview.setOnClickListener(new View.OnClickListener() {
 
                 @Override

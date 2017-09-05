@@ -33,6 +33,7 @@ import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
 
+import static io.github.stack07142.instagram_firebase.util.StatusCode.FRAGMENT_ARG;
 import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
 import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
@@ -60,49 +61,92 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
 
             case R.id.action_home:
+
+                setToolbarDefault();
+
+                Fragment detailViewFragment = new DetailViewFragment();
+
+                Bundle bundle_0 = new Bundle();
+                bundle_0.putInt(FRAGMENT_ARG, 0);
+
+                detailViewFragment.setArguments(bundle_0);
+
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.main_content, new DetailViewFragment())
+                        .replace(R.id.main_content, detailViewFragment)
                         .commit();
+
                 return true;
 
             case R.id.action_search:
 
-                Log.d("MainActivity", "action_search");
+                Fragment gridFragment = new GridFragment();
+
+                Bundle bundle_1 = new Bundle();
+                bundle_1.putInt(FRAGMENT_ARG, 1);
+
+                gridFragment.setArguments(bundle_1);
+
                 getFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_content, new GridFragment())
+                        .replace(R.id.main_content, gridFragment)
                         .commit();
+
                 return true;
 
             case R.id.action_add_photo:
+
+                setToolbarDefault();
+
                 startActivityForResult(new Intent(MainActivity.this, AddPhotoActivity.class), PICK_IMAGE_FROM_ALBUM);
 
                 return true;
 
             case R.id.action_favorite_alarm:
 
-                getFragmentManager().beginTransaction().replace(R.id.main_content, new AlarmFragment()).commit();
+                setToolbarDefault();
+
+                Fragment alarmFragment = new AlarmFragment();
+
+                Bundle bundle_3 = new Bundle();
+                bundle_3.putInt(FRAGMENT_ARG, 3);
+
+                alarmFragment.setArguments(bundle_3);
+
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_content, alarmFragment)
+                        .commit();
 
                 return true;
 
             case R.id.action_account:
 
-                Fragment fragment = new UserFragment();
+                setToolbarDefault();
+
+                Fragment userFragment = new UserFragment();
 
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("destinationUid", uid);
+                bundle.putInt(FRAGMENT_ARG, 4);
 
-                fragment.setArguments(bundle);
+                userFragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.main_content, fragment)
+                        .replace(R.id.main_content, userFragment)
                         .commit();
 
                 return true;
         }
 
         return false;
+    }
+
+    public void setToolbarDefault() {
+
+        binding.toolbarTitleImage.setVisibility(View.VISIBLE);
+        binding.toolbarBtnBack.setVisibility(View.GONE);
+        binding.toolbarUsername.setVisibility(View.GONE);
     }
 
     @Override
@@ -151,5 +195,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public ActivityMainBinding getBinding() {
 
         return binding;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.main_content);
+        int fragmentNum = fragment.getArguments().getInt(FRAGMENT_ARG, 0);
+
+        // TODO : Refactoring 필요
+        if (fragmentNum == 5) {
+
+            binding.bottomNavigation.setSelectedItemId(R.id.action_home);
+        } else {
+
+            super.onBackPressed();
+        }
     }
 }

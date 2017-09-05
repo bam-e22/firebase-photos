@@ -45,6 +45,10 @@
     <string name="upload_success">업로드 성공</string>
     <string name="upload_fail">업로드 실패</string>
 
+    <!-- Toolbar -->
+    <string name="back">Back</string>
+
+    <!-- etc -->
     <item name="visible" type="id" />
     <item name="masked" type="id" />
 </resources>
