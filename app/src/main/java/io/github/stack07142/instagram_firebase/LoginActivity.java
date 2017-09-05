@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         binding.googleSignInButton.setOnClickListener(this);
 
         // Facebook Login
+        binding.facebookLoginButton.setOnClickListener(this);
         callbackManager = CallbackManager.Factory.create();
 
         // Email 로그인
