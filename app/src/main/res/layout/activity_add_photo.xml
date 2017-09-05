@@ -42,6 +42,7 @@
         android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_below="@id/toolbar_division"
+        android:layout_margin="8dp"
         tools:src="@drawable/ic_account" />
 
     <android.support.design.widget.TextInputLayout
@@ -49,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_division"
+        android:layout_margin="8dp"
         android:layout_toEndOf="@id/addphoto_image">
 
         <EditText
@@ -65,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edittext"
+        android:layout_margin="8dp"
         android:layout_toEndOf="@id/addphoto_image"
         android:text="@string/upload_image"
         android:theme="@style/ButtonStyle" />
