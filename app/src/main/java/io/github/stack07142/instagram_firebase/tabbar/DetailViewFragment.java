@@ -26,13 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import io.github.stack07142.instagram_firebase.MainActivity;
 import io.github.stack07142.instagram_firebase.R;
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
 public class DetailViewFragment extends Fragment {
 
-    FirebaseUser user;
+    private FirebaseUser user;
 
     public DetailViewFragment() {
 
@@ -50,6 +51,13 @@ public class DetailViewFragment extends Fragment {
         recyclerView.setAdapter(new DetailRecyclerViewAdapter());
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ((MainActivity) getActivity()).getBinding().progressBar.setVisibility(View.GONE);
     }
 
     private class DetailRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

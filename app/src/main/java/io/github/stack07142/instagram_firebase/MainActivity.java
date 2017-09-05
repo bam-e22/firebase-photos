@@ -13,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener(this);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.action_home);
     }
 
@@ -143,5 +145,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
             binding.bottomNavigation.setSelectedItemId(R.id.action_account);
         }
+    }
+
+    public ActivityMainBinding getBinding() {
+
+        return binding;
     }
 }
