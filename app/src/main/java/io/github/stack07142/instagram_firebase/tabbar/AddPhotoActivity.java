@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -101,7 +100,8 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
 
         if (v.getId() == R.id.addphoto_btn_upload && photoUrl != null) {
 
-            Log.d("AddPhotoActivity", " upload button clicked");
+            binding.progressBar.setVisibility(View.VISIBLE);
+
             File file = new File(photoUrl);
             Uri contentUri = Uri.fromFile(file);
             StorageReference storageRef =
@@ -112,7 +112,9 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Toast.makeText(AddPhotoActivity.this, "업로드 성공",
+                            binding.progressBar.setVisibility(View.GONE);
+
+                            Toast.makeText(AddPhotoActivity.this, getString(R.string.upload_success),
                                     Toast.LENGTH_SHORT).show();
 
                             @SuppressWarnings("VisibleForTests")
@@ -144,7 +146,10 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddPhotoActivity.this, "업로드 실패",
+
+                            binding.progressBar.setVisibility(View.GONE);
+
+                            Toast.makeText(AddPhotoActivity.this, getString(R.string.upload_fail),
                                     Toast.LENGTH_SHORT).show();
                         }
                     })

@@ -42,6 +42,8 @@
     <!-- Add Photo -->
     <string name="upload_image">사진 올리기</string>
     <string name="hint_image_content">내용</string>
+    <string name="upload_success">업로드 성공</string>
+    <string name="upload_fail">업로드 실패</string>
 
     <item name="visible" type="id" />
     <item name="masked" type="id" />
