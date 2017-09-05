@@ -6,7 +6,7 @@
 
 <a href="https://play.google.com/store/apps/details?id=io.github.stack07142.instagram_firebase" > <img src="./img/google-play-badge.png" width="150" height="58"></a>
 
-<img src="./img/screenshot_1.png" width="280" height="498"> <img src="./img/screenshot_2.png" width="280" height="498"><br/>
+<img src="./img/screenshot_1.png" width="280" height="498"> <img src="./img/screenshot_2.png" width="280" height="498">
 <img src="./img/screenshot_3.png" width="280" height="498"> <img src="./img/screenshot_4.png" width="280" height="498">
 
 
