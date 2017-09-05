@@ -1,6 +1,8 @@
 package io.github.stack07142.instagram_firebase.tabbar;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -60,6 +62,18 @@ public class UserFragment extends Fragment {
     private String destinationUid;
     private String uid;
 
+    // Activity
+    private Activity activity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+
+            activity = (Activity) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -82,11 +96,11 @@ public class UserFragment extends Fragment {
                 // User is signed out
                 if (user == null) {
 
-                    Toast.makeText(getActivity(), getString(R.string.signout_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getString(R.string.signout_success), Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    getActivity().startActivity(intent);
-                    getActivity().finish();
+                    Intent intent = new Intent(activity, LoginActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();
                 }
             }
         };
@@ -145,12 +159,12 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
 
                 //권한 요청 하는 부분
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
                 //앨범 오픈
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
-                getActivity().startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
+                activity.startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
             }
         });
 
@@ -162,7 +176,7 @@ public class UserFragment extends Fragment {
         getFollowing();
 
         // Recycler View
-        binding.accountRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        binding.accountRecyclerview.setLayoutManager(new GridLayoutManager(activity, 3));
         binding.accountRecyclerview.setAdapter(new UserFragmentRecyclerViewAdapter());
     }
 
@@ -264,7 +278,7 @@ public class UserFragment extends Fragment {
 
                             @SuppressWarnings("VisibleForTests")
                             String url = dataSnapshot.getValue().toString();
-                            Glide.with(getActivity())
+                            Glide.with(activity)
                                     .load(url)
                                     .apply(new RequestOptions().circleCrop()).into(binding.accountIvProfile);
                         }
@@ -436,13 +450,13 @@ public class UserFragment extends Fragment {
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
-        final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage((FragmentActivity) getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+        final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
+                .enableAutoManage((FragmentActivity) activity, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
                         // hideProgressDialog();
-                        Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -465,7 +479,7 @@ public class UserFragment extends Fragment {
                             if (!status.isSuccess()) {
 
                                 // hideProgressDialog();
-                                Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -476,7 +490,7 @@ public class UserFragment extends Fragment {
             public void onConnectionSuspended(int i) {
 
                 // hideProgressDialog();
-                Toast.makeText(getActivity(), getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getString(R.string.signout_fail), Toast.LENGTH_SHORT).show();
             }
         });
     }

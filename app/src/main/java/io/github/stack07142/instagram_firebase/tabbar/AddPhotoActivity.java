@@ -3,6 +3,7 @@ package io.github.stack07142.instagram_firebase.tabbar;
 import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,9 +13,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,15 +29,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.databinding.ActivityAddPhotoBinding;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
 public class AddPhotoActivity extends AppCompatActivity implements View.OnClickListener {
 
     final static private int PICK_FROM_ALBUM = 0;
 
-    private EditText editText;
-    private Button button;
-    private ImageView imageView;
+    // Data Binding
+    private ActivityAddPhotoBinding binding;
 
     private String photoUrl;
 
@@ -51,13 +49,11 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_photo);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_photo);
 
         //ImageView Button EditText 찾아오고 버튼 세팅하기
-        imageView = (ImageView) findViewById(R.id.addphoto_image);
-        editText = (EditText) findViewById(R.id.addphoto_edit_explain);
-        button = (Button) findViewById(R.id.addphoto_btn_upload);
-        button.setOnClickListener(this);
+        binding.addphotoBtnUpload.setOnClickListener(this);
 
         //권한 요청 하는 부분
         ActivityCompat.requestPermissions
@@ -96,7 +92,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
             photoUrl = cursor.getString(column_index);
 
             //이미지뷰에 이미지 세팅
-            imageView.setImageURI(data.getData());
+            binding.addphotoImage.setImageURI(data.getData());
         }
     }
 
@@ -134,7 +130,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
                             //유저의 UID
                             contentDTO.uid = firebaseAuth.getCurrentUser().getUid();
                             //게시물의 설명
-                            contentDTO.explain = editText.getText().toString();
+                            contentDTO.explain = binding.addphotoEditExplain.getText().toString();
                             //유저의 아이디
                             contentDTO.userId = firebaseAuth.getCurrentUser().getEmail();
                             //게시물 업로드 시간
