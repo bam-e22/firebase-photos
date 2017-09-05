@@ -71,6 +71,17 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
 
         // Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
+
+        binding.addphotoImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, PICK_IMAGE_FROM_ALBUM);
+            }
+        });
     }
 
     @Override
