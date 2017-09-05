@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
+        // Bottom Navigation View
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this);
         binding.bottomNavigation.setSelectedItemId(R.id.action_home);
     }
@@ -88,15 +89,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 Fragment fragment = new UserFragment();
 
-                Bundle bundle = new Bundle();
-
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+                Bundle bundle = new Bundle();
                 bundle.putString("destinationUid", uid);
 
                 fragment.setArguments(bundle);
-
-                getFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.main_content, fragment)
+                        .commit();
 
                 return true;
         }

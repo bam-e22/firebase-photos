@@ -2,6 +2,7 @@ package io.github.stack07142.instagram_firebase.tabbar;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 
 import io.github.stack07142.instagram_firebase.MainActivity;
 import io.github.stack07142.instagram_firebase.R;
+import io.github.stack07142.instagram_firebase.databinding.ItemDetailviewBinding;
 import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
@@ -104,7 +104,7 @@ public class DetailViewFragment extends Fragment {
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-            CustomViewHolder customViewHolder = (CustomViewHolder) holder;
+            final ItemDetailviewBinding binding = ((CustomViewHolder) holder).getBinding();
 
             // Profile Image
             FirebaseDatabase.getInstance()
@@ -120,10 +120,9 @@ public class DetailViewFragment extends Fragment {
                                 @SuppressWarnings("VisibleForTests")
                                 String url = dataSnapshot.getValue().toString();
 
-                                ImageView profileImageView = ((CustomViewHolder) holder).profileImageView;
                                 Glide.with(holder.itemView.getContext())
                                         .load(url)
-                                        .apply(new RequestOptions().circleCrop()).into(profileImageView);
+                                        .apply(new RequestOptions().circleCrop()).into(binding.detailviewitemProfileImage);
                             }
                         }
 
@@ -134,19 +133,19 @@ public class DetailViewFragment extends Fragment {
                     });
 
             // 유저 아이디
-            customViewHolder.profileTextView.setText(contentDTOs.get(position).userId);
+            binding.detailviewitemProfileTextview.setText(contentDTOs.get(position).userId);
 
             // 가운데 이미지
             Glide.with(holder.itemView.getContext())
                     .load(contentDTOs.get(position).imageUrl)
-                    .into(customViewHolder.contentImageView);
+                    .into(binding.detailviewitemImageviewContent);
 
             // 설명 텍스트
-            customViewHolder.explainTextView.setText(contentDTOs.get(position).explain);
+            binding.detailviewitemExplainTextview.setText(contentDTOs.get(position).explain);
 
 
             final int finalPosition = position;
-            customViewHolder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
+            binding.detailviewitemFavoriteImageview.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -158,15 +157,15 @@ public class DetailViewFragment extends Fragment {
             if (contentDTOs.get(position)
                     .favorites.containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
-                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite);
+                binding.detailviewitemFavoriteImageview.setImageResource(R.drawable.ic_favorite);
             } else {
 
-                customViewHolder.favoriteImageView.setImageResource(R.drawable.ic_favorite_border);
+                binding.detailviewitemFavoriteImageview.setImageResource(R.drawable.ic_favorite_border);
             }
 
-            customViewHolder.favoriteCounterTextView.setText("좋아요 " + contentDTOs.get(position).favoriteCount + "개");
+            binding.detailviewitemFavoritecounterTextview.setText("좋아요 " + contentDTOs.get(position).favoriteCount + "개");
 
-            customViewHolder.commentImageView.setOnClickListener(new View.OnClickListener() {
+            binding.detailviewitemCommentImageview.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -242,27 +241,17 @@ public class DetailViewFragment extends Fragment {
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 
-            ImageView profileImageView;
-            TextView profileTextView;
-            ImageView contentImageView;
-            ImageView favoriteImageView;
-            ImageView commentImageView;
-            TextView favoriteCounterTextView;
-            TextView explainTextView;
+            private ItemDetailviewBinding binding;
 
             CustomViewHolder(View itemView) {
                 super(itemView);
 
-                profileImageView = (ImageView) itemView.findViewById(R.id.detailviewitem_profile_image);
-                profileTextView = (TextView) itemView.findViewById(R.id.detailviewitem_profile_textview);
+                binding = DataBindingUtil.bind(itemView);
+            }
 
-                contentImageView = (ImageView) itemView.findViewById(R.id.detailviewitem_imageview_content);
+            ItemDetailviewBinding getBinding() {
 
-                favoriteImageView = (ImageView) itemView.findViewById(R.id.detailviewitem_favorite_imageview);
-                commentImageView = (ImageView) itemView.findViewById(R.id.detailviewitem_comment_imageview);
-
-                favoriteCounterTextView = (TextView) itemView.findViewById(R.id.detailviewitem_favoritecounter_textview);
-                explainTextView = (TextView) itemView.findViewById(R.id.detailviewitem_explain_textview);
+                return binding;
             }
         }
     }
