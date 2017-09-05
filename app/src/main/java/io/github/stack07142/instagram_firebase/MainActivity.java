@@ -3,6 +3,7 @@ package io.github.stack07142.instagram_firebase;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.stack07142.instagram_firebase.databinding.ActivityMainBinding;
 import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
 import io.github.stack07142.instagram_firebase.tabbar.AlarmFragment;
 import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
@@ -35,16 +37,18 @@ import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFI
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private BottomNavigationView bottomNavigationView;
+    // Data Binding
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(this);
+
+        binding.bottomNavigation.setSelectedItemId(R.id.action_home);
     }
 
     @Override
@@ -137,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     });
         } else if (requestCode == PICK_IMAGE_FROM_ALBUM && resultCode == RESULT_OK) {
 
-            bottomNavigationView.setSelectedItemId(R.id.action_account);
+            binding.bottomNavigation.setSelectedItemId(R.id.action_account);
         }
     }
 }
