@@ -30,16 +30,18 @@ import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
 
+import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
 import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         bottomNavigationView.setSelectedItemId(R.id.action_home);
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
 
             case R.id.action_add_photo:
-                startActivity(new Intent(MainActivity.this, AddPhotoActivity.class));
+                startActivityForResult(new Intent(MainActivity.this, AddPhotoActivity.class), PICK_IMAGE_FROM_ALBUM);
 
                 return true;
 
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // 앨범에서 사진 선택시 호출 되는 부분분
+        // 앨범에서 Profile Image 사진 선택시 호출 되는 부분분
         if (requestCode == PICK_PROFILE_FROM_ALBUM && resultCode == RESULT_OK) {
 
             String[] proj = {MediaStore.Images.Media.DATA};
@@ -133,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             FirebaseDatabase.getInstance().getReference().child("profileImages").updateChildren(map);
                         }
                     });
+        } else if (requestCode == PICK_IMAGE_FROM_ALBUM && resultCode == RESULT_OK) {
+
+            bottomNavigationView.setSelectedItemId(R.id.action_account);
         }
     }
 }

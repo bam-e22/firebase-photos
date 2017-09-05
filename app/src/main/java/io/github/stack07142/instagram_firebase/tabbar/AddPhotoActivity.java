@@ -140,7 +140,9 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
 
                             //게시물을 데이터를 생성 및 엑티비티 종료
                             images.setValue(contentDTO);
-                            AddPhotoActivity.this.finish();
+
+                            setResult(RESULT_OK);
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
