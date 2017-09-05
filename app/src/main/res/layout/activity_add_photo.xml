@@ -44,7 +44,6 @@
             android:orientation="horizontal" />
 
         <!-- Contents -->
-
         <ImageView
             android:id="@+id/addphoto_image"
             android:layout_width="100dp"

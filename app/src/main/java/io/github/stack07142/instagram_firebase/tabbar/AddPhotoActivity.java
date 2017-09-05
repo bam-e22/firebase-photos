@@ -165,10 +165,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(AddPhotoActivity.this, getString(R.string.upload_fail),
                                     Toast.LENGTH_SHORT).show();
                         }
-                    })
-            ;
-
-
+                    });
         }
     }
 }
