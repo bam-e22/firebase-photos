@@ -47,9 +47,9 @@ import io.github.stack07142.instagram_firebase.model.AlarmDTO;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 import io.github.stack07142.instagram_firebase.model.FollowDTO;
 
-public class UserFragment extends Fragment {
+import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
-    private static final int PICK_FROM_ALBUM = 10;
+public class UserFragment extends Fragment {
 
     // Data Binding
     private FragmentUserBinding binding;
@@ -164,7 +164,7 @@ public class UserFragment extends Fragment {
                 //앨범 오픈
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
-                activity.startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
+                activity.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM);
             }
         });
 

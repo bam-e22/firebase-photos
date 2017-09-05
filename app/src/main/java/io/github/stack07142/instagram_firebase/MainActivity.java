@@ -30,9 +30,9 @@ import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
 import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
 import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
-    private static final int PICK_FROM_ALBUM = 10;
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onActivityResult(requestCode, resultCode, data);
 
         // 앨범에서 사진 선택시 호출 되는 부분분
-        if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
+        if (requestCode == PICK_PROFILE_FROM_ALBUM && resultCode == RESULT_OK) {
 
             String[] proj = {MediaStore.Images.Media.DATA};
             CursorLoader cursorLoader = new CursorLoader(this, data.getData(), proj, null, null, null);

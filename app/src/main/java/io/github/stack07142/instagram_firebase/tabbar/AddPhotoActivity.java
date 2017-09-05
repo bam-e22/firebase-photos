@@ -31,9 +31,9 @@ import io.github.stack07142.instagram_firebase.R;
 import io.github.stack07142.instagram_firebase.databinding.ActivityAddPhotoBinding;
 import io.github.stack07142.instagram_firebase.model.ContentDTO;
 
-public class AddPhotoActivity extends AppCompatActivity implements View.OnClickListener {
+import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
 
-    final static private int PICK_FROM_ALBUM = 0;
+public class AddPhotoActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Data Binding
     private ActivityAddPhotoBinding binding;
@@ -61,7 +61,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
         //앨범 오픈
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM);
+        startActivityForResult(photoPickerIntent, PICK_IMAGE_FROM_ALBUM);
 
         // Firebase storage
         firebaseStorage = FirebaseStorage.getInstance();
@@ -77,7 +77,7 @@ public class AddPhotoActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // 앨범에서 사진 선택시 호출 되는 부분
-        if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
+        if (requestCode == PICK_IMAGE_FROM_ALBUM && resultCode == RESULT_OK) {
 
             String[] proj = {MediaStore.Images.Media.DATA};
             CursorLoader cursorLoader = new CursorLoader(this, data.getData(), proj,
