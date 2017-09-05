@@ -40,6 +40,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginStart="8dp"
         android:weightSum="1">
 
         <ImageView
@@ -60,6 +61,7 @@
         android:id="@+id/detailviewitem_favoritecounter_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         tools:text="좋아요 0개" />
 
     <TextView
@@ -67,6 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="35dp"
+        android:layout_marginStart="8dp"
         tools:text="사진 내용" />
 
 </LinearLayout>
