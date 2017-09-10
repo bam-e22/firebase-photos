@@ -14,6 +14,7 @@
     <string name="signout">로그아웃</string>
     <string name="signout_success">로그아웃 성공</string>
     <string name="signout_fail">로그아웃 실패</string>
+    <string name="signout_fail_null">이메일과 비밀번호를 입력해주세요</string>
 
     <!-- Bottom Navigation View -->
     <string name="home">home</string>

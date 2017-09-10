@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -180,9 +181,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             // 이메일 로그인 버튼
             case R.id.email_login_button:
 
-                binding.progressBar.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(binding.emailEdittext.getText().toString()) || TextUtils.isEmpty(binding.passwordEdittext.getText().toString())) {
 
-                createAndLoginEmail();
+                    Toast.makeText(this, getString(R.string.signout_fail_null), Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    createAndLoginEmail();
+                }
                 break;
         }
     }
@@ -256,6 +263,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     //이메일 회원가입 및 로그인 메소드
     private void createAndLoginEmail() {
+
         auth.createUserWithEmailAndPassword(binding.emailEdittext.getText().toString(), binding.passwordEdittext.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
