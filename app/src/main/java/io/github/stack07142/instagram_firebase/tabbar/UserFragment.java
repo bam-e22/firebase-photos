@@ -215,7 +215,8 @@ public class UserFragment extends Fragment {
 
             contentDTOs = new ArrayList<>();
 
-            dbRef.child("images").addValueEventListener(new ValueEventListener() {
+            // 나의 사진만 찾기
+            dbRef.child("images").orderByChild("uid").equalTo(currentUserUid).addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -226,11 +227,7 @@ public class UserFragment extends Fragment {
 
                         ContentDTO content = snapshot.getValue(ContentDTO.class);
 
-                        // 나의 사진만 찾기
-                        if (content.uid.equals(uid)) {
-
-                            contentDTOs.add(snapshot.getValue(ContentDTO.class));
-                        }
+                        contentDTOs.add(snapshot.getValue(ContentDTO.class));
                     }
 
                     binding.accountTvPostCount.setText(String.valueOf(contentDTOs.size()));
