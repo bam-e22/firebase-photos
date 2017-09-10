@@ -13,6 +13,8 @@
 ## Features
 - [x] Firebase Authentication
 - [x] Firebase Realtime Database
+    - [x] Flatten data structures
+    - [x] Use an index of groups
 - [x] Firebase Storage
 - [x] Material Design
 - [x] Displaying Images with the Glide Library
