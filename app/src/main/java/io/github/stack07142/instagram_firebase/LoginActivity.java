@@ -210,6 +210,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+            } else {
+
+                binding.progressBar.setVisibility(View.GONE);
             }
         }
     }
