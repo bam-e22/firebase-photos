@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#ededed</color>
     <color name="colorPrimaryDark">#e1e1e1</color>
+    <color name="colorLightGray">#f1f1f1</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDivision">#e0e0e0</color>

@@ -28,6 +28,7 @@
     <string name="following">팔로잉</string>
     <string name="follower">팔로워</string>
     <string name="follow">팔로우</string>
+    <string name="follow_cancel">팔로우 취소</string>
     <string name="profile">Profile</string>
     <string name="count_0">0</string>
 
