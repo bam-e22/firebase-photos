@@ -216,7 +216,7 @@ public class UserFragment extends Fragment {
             contentDTOs = new ArrayList<>();
 
             // 나의 사진만 찾기
-            dbRef.child("images").orderByChild("uid").equalTo(currentUserUid).addValueEventListener(new ValueEventListener() {
+            dbRef.child("images").orderByChild("uid").equalTo(uid).addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
