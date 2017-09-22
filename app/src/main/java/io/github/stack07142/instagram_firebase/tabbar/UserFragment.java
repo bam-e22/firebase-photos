@@ -124,6 +124,7 @@ public class UserFragment extends Fragment {
          */
 
         // 버튼 - Follow or SignOut
+
         if (getArguments() != null) {
 
             uid = getArguments().getString("destinationUid");
@@ -324,9 +325,13 @@ public class UserFragment extends Fragment {
                                         .getBackground()
                                         .setColorFilter(ContextCompat.getColor(activity, R.color.colorLightGray), PorterDuff.Mode.MULTIPLY);
                             } else {
-                                binding.accountBtnFollowSignout.setText(getString(R.string.follow));
-                                binding.accountBtnFollowSignout
-                                        .getBackground().setColorFilter(null);
+
+                                if (!uid.equals(currentUserUid)) {
+
+                                    binding.accountBtnFollowSignout.setText(getString(R.string.follow));
+                                    binding.accountBtnFollowSignout
+                                            .getBackground().setColorFilter(null);
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
