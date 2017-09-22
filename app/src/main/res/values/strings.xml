@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase Instagram</string>
+    <string name="app_name">Firebase Photos</string>
     <string name="facebook_app_id">1411258448950016</string>
     <string name="fb_login_protocol_scheme">fb1411258448950016</string>
 
