@@ -1,4 +1,4 @@
-# Firebase Instagram
+# Firebase Photos
 
 ## Overview
 - This is a clone of Instagram made to practice Android and Firebase
