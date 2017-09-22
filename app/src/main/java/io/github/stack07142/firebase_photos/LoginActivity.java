@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase;
+package io.github.stack07142.firebase_photos;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -32,7 +32,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Arrays;
 
-import io.github.stack07142.instagram_firebase.databinding.ActivityLoginBinding;
+import io.github.stack07142.firebase_photos.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 

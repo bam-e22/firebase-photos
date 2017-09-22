@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="io.github.stack07142.instagram_firebase.MainActivity">
+        tools:context="io.github.stack07142.firebase_photos.MainActivity">
 
         <!-- Toolbar -->
         <android.support.v7.widget.Toolbar

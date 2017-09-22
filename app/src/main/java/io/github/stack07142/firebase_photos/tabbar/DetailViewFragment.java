@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.tabbar;
+package io.github.stack07142.firebase_photos.tabbar;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -25,13 +25,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import io.github.stack07142.instagram_firebase.MainActivity;
-import io.github.stack07142.instagram_firebase.R;
-import io.github.stack07142.instagram_firebase.databinding.ItemDetailviewBinding;
-import io.github.stack07142.instagram_firebase.model.AlarmDTO;
-import io.github.stack07142.instagram_firebase.model.ContentDTO;
+import io.github.stack07142.firebase_photos.MainActivity;
+import io.github.stack07142.firebase_photos.R;
+import io.github.stack07142.firebase_photos.databinding.ItemDetailviewBinding;
+import io.github.stack07142.firebase_photos.model.AlarmDTO;
+import io.github.stack07142.firebase_photos.model.ContentDTO;
 
-import static io.github.stack07142.instagram_firebase.util.StatusCode.FRAGMENT_ARG;
+import static io.github.stack07142.firebase_photos.util.StatusCode.FRAGMENT_ARG;
 
 public class DetailViewFragment extends Fragment {
 

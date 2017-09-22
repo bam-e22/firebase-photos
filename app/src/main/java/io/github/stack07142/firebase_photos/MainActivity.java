@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase;
+package io.github.stack07142.firebase_photos;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,16 +25,16 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.stack07142.instagram_firebase.databinding.ActivityMainBinding;
-import io.github.stack07142.instagram_firebase.tabbar.AddPhotoActivity;
-import io.github.stack07142.instagram_firebase.tabbar.AlarmFragment;
-import io.github.stack07142.instagram_firebase.tabbar.DetailViewFragment;
-import io.github.stack07142.instagram_firebase.tabbar.GridFragment;
-import io.github.stack07142.instagram_firebase.tabbar.UserFragment;
+import io.github.stack07142.firebase_photos.databinding.ActivityMainBinding;
+import io.github.stack07142.firebase_photos.tabbar.AddPhotoActivity;
+import io.github.stack07142.firebase_photos.tabbar.AlarmFragment;
+import io.github.stack07142.firebase_photos.tabbar.DetailViewFragment;
+import io.github.stack07142.firebase_photos.tabbar.GridFragment;
+import io.github.stack07142.firebase_photos.tabbar.UserFragment;
 
-import static io.github.stack07142.instagram_firebase.util.StatusCode.FRAGMENT_ARG;
-import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
-import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
+import static io.github.stack07142.firebase_photos.util.StatusCode.FRAGMENT_ARG;
+import static io.github.stack07142.firebase_photos.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
+import static io.github.stack07142.firebase_photos.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 

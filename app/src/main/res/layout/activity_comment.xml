@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.github.stack07142.instagram_firebase.tabbar.CommentActivity">
+    tools:context="io.github.stack07142.firebase_photos.tabbar.CommentActivity">
 
     <!-- Toolbar -->
     <android.support.v7.widget.Toolbar
@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="3dp"
+            android:layout_margin="6dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/logo_title" />
 

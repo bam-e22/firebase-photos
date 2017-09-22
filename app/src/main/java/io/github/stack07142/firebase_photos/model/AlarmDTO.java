@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.model;
+package io.github.stack07142.firebase_photos.model;
 
 public class AlarmDTO {
 

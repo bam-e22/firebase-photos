@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.stack07142.instagram_firebase">
+    package="io.github.stack07142.firebase_photos">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -32,16 +32,16 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name="io.github.stack07142.firebase_photos.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".tabbar.AddPhotoActivity" />
-        <activity android:name=".tabbar.CommentActivity" />
+        <activity android:name="io.github.stack07142.firebase_photos.MainActivity" />
+        <activity android:name="io.github.stack07142.firebase_photos.tabbar.AddPhotoActivity" />
+        <activity android:name="io.github.stack07142.firebase_photos.tabbar.CommentActivity" />
     </application>
 
 </manifest>

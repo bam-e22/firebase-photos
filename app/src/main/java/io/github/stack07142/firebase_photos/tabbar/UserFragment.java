@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.tabbar;
+package io.github.stack07142.firebase_photos.tabbar;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -40,15 +40,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import io.github.stack07142.instagram_firebase.LoginActivity;
-import io.github.stack07142.instagram_firebase.MainActivity;
-import io.github.stack07142.instagram_firebase.R;
-import io.github.stack07142.instagram_firebase.databinding.FragmentUserBinding;
-import io.github.stack07142.instagram_firebase.model.AlarmDTO;
-import io.github.stack07142.instagram_firebase.model.ContentDTO;
-import io.github.stack07142.instagram_firebase.model.FollowDTO;
+import io.github.stack07142.firebase_photos.LoginActivity;
+import io.github.stack07142.firebase_photos.MainActivity;
+import io.github.stack07142.firebase_photos.R;
+import io.github.stack07142.firebase_photos.databinding.FragmentUserBinding;
+import io.github.stack07142.firebase_photos.model.AlarmDTO;
+import io.github.stack07142.firebase_photos.model.ContentDTO;
+import io.github.stack07142.firebase_photos.model.FollowDTO;
 
-import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
+import static io.github.stack07142.firebase_photos.util.StatusCode.PICK_PROFILE_FROM_ALBUM;
 
 public class UserFragment extends Fragment {
 

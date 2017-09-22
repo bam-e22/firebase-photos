@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.tabbar;
+package io.github.stack07142.firebase_photos.tabbar;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -22,8 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.stack07142.instagram_firebase.R;
-import io.github.stack07142.instagram_firebase.model.AlarmDTO;
+import io.github.stack07142.firebase_photos.R;
+import io.github.stack07142.firebase_photos.model.AlarmDTO;
 
 public class AlarmFragment extends Fragment {
 

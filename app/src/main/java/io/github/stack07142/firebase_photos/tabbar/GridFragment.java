@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.tabbar;
+package io.github.stack07142.firebase_photos.tabbar;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import io.github.stack07142.instagram_firebase.R;
-import io.github.stack07142.instagram_firebase.model.ContentDTO;
+import io.github.stack07142.firebase_photos.R;
+import io.github.stack07142.firebase_photos.model.ContentDTO;
 
 public class GridFragment extends Fragment {
 

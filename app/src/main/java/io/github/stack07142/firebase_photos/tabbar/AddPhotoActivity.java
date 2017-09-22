@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.tabbar;
+package io.github.stack07142.firebase_photos.tabbar;
 
 import android.Manifest;
 import android.content.Intent;
@@ -27,11 +27,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import io.github.stack07142.instagram_firebase.R;
-import io.github.stack07142.instagram_firebase.databinding.ActivityAddPhotoBinding;
-import io.github.stack07142.instagram_firebase.model.ContentDTO;
+import io.github.stack07142.firebase_photos.R;
+import io.github.stack07142.firebase_photos.databinding.ActivityAddPhotoBinding;
+import io.github.stack07142.firebase_photos.model.ContentDTO;
 
-import static io.github.stack07142.instagram_firebase.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
+import static io.github.stack07142.firebase_photos.util.StatusCode.PICK_IMAGE_FROM_ALBUM;
 
 public class AddPhotoActivity extends AppCompatActivity implements View.OnClickListener {
 

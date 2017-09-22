@@ -1,4 +1,4 @@
-package io.github.stack07142.instagram_firebase.util;
+package io.github.stack07142.firebase_photos.util;
 
 public class StatusCode {
 
