@@ -19,7 +19,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="35dp"
             android:layout_alignParentTop="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:contentInsetStart="0dp"
@@ -28,7 +28,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="6dp"
+                android:layout_margin="3dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/logo_title" />
 
